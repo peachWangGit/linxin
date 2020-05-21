@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appOrderItem.dao.AppOrderItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appOrderItem.entity.AppOrderItem">
+        <id column="id" property="id" />
+        <result column="buy_price" property="buyPrice" />
+        <result column="order_sn" property="orderSn" />
+        <result column="product_id" property="productId" />
+        <result column="product_image" property="productImage" />
+        <result column="product_title" property="productTitle" />
+        <result column="quantity" property="quantity" />
+        <result column="redeem_integral" property="redeemIntegral" />
+        <result column="sku_id" property="skuId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                buy_price,
+                id,
+                order_sn,
+                product_id,
+                product_image,
+                product_title,
+                quantity,
+                redeem_integral,
+                sku_id
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appOrderItem.entity.AppOrderItem">
+        select * from app_order_item
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                CONCAT(
+                            ,order_sn
+                            ,product_image
+                            ,product_title
+                ) like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+
+            <if test="parameter.condition != null and parameter.condition.orderSn !=null and parameter.condition.orderSn !='' ">
+                order_sn =#{parameter.condition.orderSn}
+            </if>
+
+        </trim>
+    </select>
+
+    <select id="listFieldQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+
+        select * from app_order_item
+        <trim prefix="where" prefixOverrides="and">
+
+                        <if test="parameter.buyPrice != null and parameter.buyPrice .size() == 2">
+                            and buy_price between
+                            <foreach collection="parameter.buyPrice" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+
+                    <if test=" parameter.orderSn !=null and parameter.orderSn !='' ">
+                        and order_sn like concat('%',#{parameter.orderSn},'%')
+                    </if>
+
+
+                    <if test="parameter.productId  != null and parameter.productId.size() > 0">
+                        and product_id  in
+                        <foreach collection="parameter.productId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                    <if test=" parameter.productImage !=null and parameter.productImage !='' ">
+                        and product_image like concat('%',#{parameter.productImage},'%')
+                    </if>
+
+
+                    <if test=" parameter.productTitle !=null and parameter.productTitle !='' ">
+                        and product_title like concat('%',#{parameter.productTitle},'%')
+                    </if>
+
+
+                        <if test="parameter.quantity != null and parameter.quantity .size() == 2">
+                            and quantity between
+                            <foreach collection="parameter.quantity" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                        <if test="parameter.redeemIntegral != null and parameter.redeemIntegral .size() == 2">
+                            and redeem_integral between
+                            <foreach collection="parameter.redeemIntegral" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                    <if test="parameter.skuId  != null and parameter.skuId.size() > 0">
+                        and sku_id  in
+                        <foreach collection="parameter.skuId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+        </trim>
+        order by id desc
+    </select>
+
+</mapper>

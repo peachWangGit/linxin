@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appArticle.dao.AppArticleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appArticle.entity.AppArticle">
+        <id column="id" property="id" />
+        <result column="cover_image" property="coverImage" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="images" property="images" />
+        <result column="created_date" property="createdDate" />
+        <result column="reading" property="reading" />
+        <result column="top" property="top" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, cover_image, title, content, images, created_date, reading, top
+    </sql>
+
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appArticle.entity.AppArticle">
+        select * from app_article
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                and title like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+        </trim>
+        order by id asc
+    </select>
+
+</mapper>

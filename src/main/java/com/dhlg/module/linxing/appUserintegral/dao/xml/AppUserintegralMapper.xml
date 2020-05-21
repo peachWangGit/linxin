@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appUserintegral.dao.AppUserintegralMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appUserintegral.entity.AppUserintegral">
+        <id column="id" property="id" />
+        <result column="amount" property="amount" />
+        <result column="expired_time" property="expiredTime" />
+        <result column="get_description" property="getDescription" />
+        <result column="lose_description" property="loseDescription" />
+        <result column="status" property="status" />
+        <result column="transaction_time" property="transactionTime" />
+        <result column="unfreeze_time" property="unfreezeTime" />
+        <result column="use_time" property="useTime" />
+        <result column="user_id" property="userId" />
+        <result column="last_amount" property="lastAmount" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        amount,expired_time,get_description, id,lose_description,status, transaction_time, unfreeze_time,use_time,user_id,last_amount
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appUserintegral.entity.AppUserintegral">
+        select * from app_userintegral
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+
+            </if>
+        </trim>
+        order by id desc
+    </select>
+
+    <select id="listFieldQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select * from app_userintegral
+        <trim prefix="where" prefixOverrides="and">
+
+            <if test=" parameter.getDescription !=null and parameter.getDescription !='' ">
+                and get_description like concat('%',#{parameter.getDescription},'%')
+            </if>
+
+            <if test=" parameter.loseDescription !=null and parameter.loseDescription !='' ">
+                and lose_description like concat('%',#{parameter.loseDescription},'%')
+            </if>
+
+            <if test="parameter.status != null and parameter.status.size() > 0">
+                and status in
+                <foreach collection="parameter.status" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.userId != null and parameter.userId.size() > 0">
+                and user_id in
+                <foreach collection="parameter.userId" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.amount != null and parameter.amount .size() == 2">
+                and amount between
+                <foreach collection="parameter.amount" index="index" item="item" open=" " separator=" and " close=" ">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.expiredTime != null and parameter.expiredTime .size() == 2">
+                and expired_time between
+                <foreach collection="parameter.expiredTime" index="index" item="item" open=" " separator=" and " close=" ">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.transactionTime != null and parameter.transactionTime .size() == 2">
+                and transaction_time between
+                <foreach collection="parameter.transactionTime" index="index" item="item" open=" " separator=" and " close=" ">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.unfreezeTime != null and parameter.unfreezeTime .size() == 2">
+                and unfreeze_time between
+                <foreach collection="parameter.unfreezeTime" index="index" item="item" open=" " separator=" and " close=" ">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.useTime != null and parameter.useTime .size() == 2">
+                and use_time between
+                <foreach collection="parameter.useTime" index="index" item="item" open=" " separator=" and " close=" ">
+                    #{item}
+                </foreach>
+            </if>
+
+
+        </trim>
+        order by id desc
+    </select>
+</mapper>

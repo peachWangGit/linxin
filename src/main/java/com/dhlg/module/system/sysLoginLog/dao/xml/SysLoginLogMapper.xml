@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.system.sysLoginLog.dao.SysLoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.system.sysLoginLog.entity.SysLoginLog">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="login_ip" property="loginIp" />
+        <result column="login_address" property="loginAddress" />
+        <result column="browser_name" property="browserName" />
+        <result column="operation_system" property="operationSystem" />
+        <result column="login_status" property="loginStatus" />
+        <result column="operation_info" property="operationInfo" />
+        <result column="login_time" property="loginTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, login_ip, login_address, browser_name, operation_system, login_status, operation_info, login_time
+    </sql>
+
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultMap="BaseResultMap">
+        select  login_log.*,user.user_name from sys_login_log login_log
+        inner join sys_user user on user.id = login_log.user_id
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.loginAddress !=null and parameter.condition.loginAddress !=''">
+                and login_log.login_address like concat('%',#{parameter.condition.loginAddress},'%')
+            </if>
+
+            <if test="parameter.condition != null and parameter.condition.loginUser != null and parameter.condition.loginUser != ''">
+                and user.user_name like  concat('%',#{parameter.condition.loginUser},'%')
+            </if>
+
+            <if test="parameter.condition != null and  parameter.condition.loginStatus != null and parameter.condition.loginStatus!='' ">
+                and login_log.login_status = #{parameter.condition.loginStatus}
+            </if>
+
+            <if test="parameter.condition != null and parameter.condition.startTime != null and parameter.condition.startTime !='' and parameter.condition.endTime !=null  and parameter.condition.endTime !=''">
+                and login_log.login_time between #{parameter.condition.startTime} and #{parameter.condition.endTime}
+            </if>
+
+        </trim>
+        order by login_log.id desc
+    </select>
+
+</mapper>

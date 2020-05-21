@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appProductcomment.dao.AppProductcommentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appProductcomment.entity.AppProductcomment">
+        <id column="id" property="id" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <result column="fraction" property="fraction" />
+        <result column="images" property="images" />
+        <result column="parend_id" property="parendId" />
+        <result column="product_id" property="productId" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                content,
+                create_time,
+                fraction,
+                id,
+                images,
+                parend_id,
+                product_id,
+                user_id
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appProductcomment.entity.AppProductcomment">
+        select * from app_productcomment
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                CONCAT(
+                            content
+                            ,images
+                ) like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+        </trim>
+    </select>
+
+    <select id="listFieldQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+
+        select * from app_productcomment
+        <trim prefix="where" prefixOverrides="and">
+
+                    <if test=" parameter.content !=null and parameter.content !='' ">
+                        and content like concat('%',#{parameter.content},'%')
+                    </if>
+
+
+                        <if test="parameter.createTime != null and parameter.createTime .size() == 2">
+                            and create_time between
+                            <foreach collection="parameter.createTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                        <if test="parameter.fraction != null and parameter.fraction .size() == 2">
+                            and fraction between
+                            <foreach collection="parameter.fraction" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+
+                    <if test=" parameter.images !=null and parameter.images !='' ">
+                        and images like concat('%',#{parameter.images},'%')
+                    </if>
+
+
+                    <if test="parameter.parendId  != null and parameter.parendId.size() > 0">
+                        and parend_id  in
+                        <foreach collection="parameter.parendId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                    <if test="parameter.productId  != null and parameter.productId.size() > 0">
+                        and product_id  in
+                        <foreach collection="parameter.productId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                    <if test="parameter.userId  != null and parameter.userId.size() > 0">
+                        and user_id  in
+                        <foreach collection="parameter.userId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+        </trim>
+        order by id desc
+    </select>
+
+</mapper>

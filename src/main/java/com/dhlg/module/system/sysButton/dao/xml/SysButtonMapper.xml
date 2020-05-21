@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.system.sysButton.dao.SysButtonMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.system.sysButton.entity.SysButton">
+        <id column="id" property="id" />
+        <result column="button_code" property="buttonCode" />
+        <result column="button_name" property="buttonName" />
+        <result column="menu_id" property="menuId" />
+        <result column="button_url" property="buttonUrl" />
+        <result column="status" property="status" />
+        <result column="description" property="description" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, button_code, button_name, menu_id, description, create_user, create_time, update_user, update_time
+    </sql>
+
+    <select id="findButtonUrl" parameterType="string" resultMap="BaseResultMap">
+        SELECT m.button_url from sys_button m WHERE m.id in(SELECT rp.button_id FROM sys_role_permission rp WHERE
+        rp.role_id in
+        <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">#{item}
+        </foreach>
+            )
+            and m.status='1'
+    </select>
+</mapper>

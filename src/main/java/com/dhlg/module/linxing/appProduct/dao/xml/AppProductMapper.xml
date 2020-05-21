@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appProduct.dao.AppProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appProduct.entity.AppProduct">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="description" property="description" />
+        <result column="cover_image" property="coverImage" />
+        <result column="images" property="images" />
+        <result column="detail_images" property="detailImages" />
+        <result column="priority" property="priority" />
+        <result column="sold_count" property="soldCount" />
+        <result column="store_id" property="storeId" />
+        <result column="created_at" property="createdAt" />
+        <result column="status" property="status" />
+        <result column="category_id" property="categoryId" />
+        <result column="kind" property="kind" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        title,
+        description,
+        cover_image,
+        images,
+        detail_images,
+        priority,
+        sold_count,
+        store_id,
+        created_at,
+        status,
+        category_id,
+        kind
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appProduct.entity.AppProduct">
+        select * from app_product
+        <trim prefix="where" prefixOverrides="and">
+
+            <if test=" parameter.condition.userId !=null and parameter.condition.userId !='' ">
+                and created_at =#{parameter.userId}
+            </if>
+
+        </trim>
+        order by id desc
+    </select>
+
+    <insert id="getSaveId"  parameterType="com.dhlg.module.linxing.appProduct.entity.AppProduct" keyProperty="id" useGeneratedKeys="true" >
+        insert into app_product values (null,#{title},#{description},#{coverImage},#{images},#{detailImages},#{priority},#{soldCount},#{storeId},#{createdAt}
+        ,#{status},#{categoryId},#{kind})
+    </insert>
+
+    <select id="listFieldQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select * from app_product
+        <trim prefix="where" prefixOverrides="and">
+
+            <if test=" parameter.departmentId !=null and parameter.departmentId !='' and parameter.departmentId !=0">
+                and store_id =#{parameter.departmentId}
+            </if>
+
+            <if test=" parameter.kind !=null and parameter.kind !='' ">
+                and kind =#{parameter.kind}
+            </if>
+
+            <if test=" parameter.title !=null and parameter.title !='' ">
+                and title like concat('%',#{parameter.title},'%')
+            </if>
+
+            <if test=" parameter.title !=null and parameter.title !='' ">
+                and title like concat('%',#{parameter.title},'%')
+            </if>
+
+            <if test=" parameter.description !=null and parameter.description !='' ">
+                and description like concat('%',#{parameter.description},'%')
+            </if>
+
+            <if test=" parameter.priority !=null and parameter.priority !='' ">
+                and priority =#{parameter.priority}
+            </if>
+
+
+            <if test="parameter.storeId != null and parameter.storeId.size() > 0">
+                and store_id in
+                <foreach collection="parameter.storeId" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.status != null and parameter.status.size() > 0">
+                and status in
+                <foreach collection="parameter.status" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="parameter.categoryId != null and parameter.categoryId.size() > 0">
+                and category_id in
+                <foreach collection="parameter.categoryId" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </trim>
+        order by id desc
+    </select>
+
+
+</mapper>

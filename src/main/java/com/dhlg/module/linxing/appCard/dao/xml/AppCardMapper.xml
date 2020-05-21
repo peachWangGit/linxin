@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appCard.dao.AppCardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appCard.entity.AppCard">
+        <id column="id" property="id" />
+        <result column="card_name" property="cardName" />
+        <result column="card_image" property="cardImage" />
+        <result column="price" property="price" />
+        <result column="discount_price" property="discountPrice" />
+        <result column="introduction" property="introduction" />
+        <result column="give_integral" property="giveIntegral" />
+        <result column="purchase_discount" property="purchaseDiscount" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, card_name, card_image, price, discount_price, introduction
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appCard.entity.AppCard">
+        select *from app_card
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                and introduction like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+        </trim>
+        order by id asc
+    </select>
+
+
+</mapper>

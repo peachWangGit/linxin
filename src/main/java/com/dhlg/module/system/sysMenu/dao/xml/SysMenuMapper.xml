@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.system.sysMenu.dao.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.system.sysMenu.entity.SysMenu">
+        <id column="id" property="id" />
+        <result column="menu_code" property="menuCode" />
+        <result column="menu_name" property="menuName" />
+        <result column="icon" property="icon" />
+        <result column="parent_id" property="parentId" />
+        <result column="url" property="url" />
+        <result column="status" property="status" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="description" property="description" />
+        <result column="sys_type" property="sysType" />
+        <result column="is_children" property="isChildren" />
+        <result column="menu_code_name" property="menuCodeName"/>
+        <!--<collection property="buttonList"  column="id" select="selectButtonList"/>-->
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, menu_code, menu_name,menu_code_name, icon, parent_id, url, status, create_user, create_time, update_user,
+        update_time, description, sys_type
+    </sql>
+
+
+    <select id="selectButtonList" resultType="com.dhlg.module.system.sysButton.entity.SysButton">
+--         select * from sys_button where  id in ( select button_id from sys_role_permission where  menu_id = #{id} )
+        select * from sys_button
+    </select>
+
+
+    <select id="findMenuByroleIds" parameterType="string" resultMap="BaseResultMap">
+       SELECT *from sys_menu m WHERE m.id in(SELECT rp.menu_id FROM sys_role_permission rp WHERE rp.role_id in
+        <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) order by m.menu_code asc
+    </select>
+
+    <select id="queryAll"  resultMap="BaseResultMap">
+        select *,CONCAT(menu_code,'-',menu_name) as menu_code_name  from sys_menu
+        order by menu_code asc
+    </select>
+
+    <select id="findMenu"  resultType="com.dhlg.module.system.sysMenu.entity.SysMenu">
+        select *,CONCAT(menu_code,'-',menu_name) as menu_code_name  from sys_menu where status='1' order by menu_code asc
+    </select>
+
+
+
+</mapper>

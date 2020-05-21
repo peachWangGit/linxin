@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appOrder.dao.AppOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appOrder.entity.AppOrder">
+        <id column="id" property="id" />
+        <result column="address" property="address" />
+        <result column="category" property="category" />
+        <result column="city" property="city" />
+        <result column="contact" property="contact" />
+        <result column="county" property="county" />
+        <result column="courier_company" property="courierCompany" />
+        <result column="courier_number" property="courierNumber" />
+        <result column="creat_time" property="creatTime" />
+        <result column="get_token" property="getToken" />
+        <result column="kind" property="kind" />
+        <result column="order_sn" property="orderSn" />
+        <result column="order_status" property="orderStatus" />
+        <result column="pay_id" property="payId" />
+        <result column="pay_integral" property="payIntegral" />
+        <result column="pay_price" property="payPrice" />
+        <result column="pay_time" property="payTime" />
+        <result column="phone" property="phone" />
+        <result column="postage" property="postage" />
+        <result column="province" property="province" />
+        <result column="receipt_time" property="receiptTime" />
+        <result column="store_id" property="storeId" />
+        <result column="token_time" property="tokenTime" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                address,
+                category,
+                city,
+                contact,
+                county,
+                courier_company,
+                courier_number,
+                creat_time,
+                get_token,
+                id,
+                kind,
+                order_sn,
+                order_status,
+                pay_id,
+                pay_integral,
+                pay_price,
+                pay_time,
+                phone,
+                postage,
+                province,
+                receipt_time,
+                store_id,
+                token_time,
+                user_id
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appOrder.entity.AppOrder">
+        select * from app_order
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                CONCAT(
+                            address
+                            ,city
+                            ,contact
+                            ,county
+                            ,courier_company
+                            ,courier_number
+                            ,get_token
+                            ,order_sn
+                            ,pay_id
+                            ,phone
+                            ,province
+                ) like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+        </trim>
+    </select>
+
+    <select id="listFieldQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+
+        select * from app_order
+        <trim prefix="where" prefixOverrides="and">
+
+            <if test=" parameter.departmentId !=null and parameter.departmentId !='' and parameter.departmentId !=0">
+                and store_id =#{parameter.departmentId}
+            </if>
+                    <if test=" parameter.address !=null and parameter.address !='' ">
+                        and address like concat('%',#{parameter.address},'%')
+                    </if>
+
+
+                    <if test="parameter.category  != null and parameter.category.size() > 0">
+                        and category  in
+                        <foreach collection="parameter.category " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                    <if test=" parameter.city !=null and parameter.city !='' ">
+                        and city like concat('%',#{parameter.city},'%')
+                    </if>
+
+
+                    <if test=" parameter.contact !=null and parameter.contact !='' ">
+                        and contact like concat('%',#{parameter.contact},'%')
+                    </if>
+
+
+                    <if test=" parameter.county !=null and parameter.county !='' ">
+                        and county like concat('%',#{parameter.county},'%')
+                    </if>
+
+
+                    <if test=" parameter.courierCompany !=null and parameter.courierCompany !='' ">
+                        and courier_company like concat('%',#{parameter.courierCompany},'%')
+                    </if>
+
+
+                    <if test=" parameter.courierNumber !=null and parameter.courierNumber !='' ">
+                        and courier_number like concat('%',#{parameter.courierNumber},'%')
+                    </if>
+
+
+                        <if test="parameter.creatTime != null and parameter.creatTime .size() == 2">
+                            and creat_time between
+                            <foreach collection="parameter.creatTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                    <if test=" parameter.getToken !=null and parameter.getToken !='' ">
+                        and get_token like concat('%',#{parameter.getToken},'%')
+                    </if>
+
+
+
+                    <if test="parameter.kind  != null and parameter.kind.size() > 0">
+                        and kind  in
+                        <foreach collection="parameter.kind " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                    <if test=" parameter.orderSn !=null and parameter.orderSn !='' ">
+                        and order_sn like concat('%',#{parameter.orderSn},'%')
+                    </if>
+
+
+                    <if test="parameter.orderStatus  != null and parameter.orderStatus.size() > 0">
+                        and order_status  in
+                        <foreach collection="parameter.orderStatus " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                    <if test=" parameter.payId !=null and parameter.payId !='' ">
+                        and pay_id like concat('%',#{parameter.payId},'%')
+                    </if>
+
+
+                        <if test="parameter.payIntegral != null and parameter.payIntegral .size() == 2">
+                            and pay_integral between
+                            <foreach collection="parameter.payIntegral" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                        <if test="parameter.payPrice != null and parameter.payPrice .size() == 2">
+                            and pay_price between
+                            <foreach collection="parameter.payPrice" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                        <if test="parameter.payTime != null and parameter.payTime .size() == 2">
+                            and pay_time between
+                            <foreach collection="parameter.payTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                    <if test=" parameter.phone !=null and parameter.phone !='' ">
+                        and phone like concat('%',#{parameter.phone},'%')
+                    </if>
+
+
+                        <if test="parameter.postage != null and parameter.postage .size() == 2">
+                            and postage between
+                            <foreach collection="parameter.postage" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                    <if test=" parameter.province !=null and parameter.province !='' ">
+                        and province like concat('%',#{parameter.province},'%')
+                    </if>
+
+
+                        <if test="parameter.receiptTime != null and parameter.receiptTime .size() == 2">
+                            and receipt_time between
+                            <foreach collection="parameter.receiptTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                    <if test="parameter.storeId  != null and parameter.storeId.size() > 0">
+                        and store_id  in
+                        <foreach collection="parameter.storeId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+
+                        <if test="parameter.tokenTime != null and parameter.tokenTime .size() == 2">
+                            and token_time between
+                            <foreach collection="parameter.tokenTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+
+
+                    <if test="parameter.userId  != null and parameter.userId.size() > 0">
+                        and user_id  in
+                        <foreach collection="parameter.userId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+
+        </trim>
+        order by id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appMenu.dao.AppMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appMenu.entity.AppMenu">
+        <id column="id" property="id" />
+        <result column="text" property="text" />
+        <result column="img_url" property="imgUrl" />
+        <result column="jump_page" property="jumpPage" />
+        <result column="current_page" property="currentPage" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, text, img_url, jump_page, current_page
+    </sql>
+
+    <select id="queryByCondition" resultType="com.dhlg.module.linxing.appMenu.entity.AppMenu">
+        select * from app_menu
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                and text like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+        </trim>
+        order by id asc
+    </select>
+
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.linxing.appHotelreservation.dao.AppHotelreservationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.linxing.appHotelreservation.entity.AppHotelreservation">
+        <id column="id" property="id" />
+        <result column="amount" property="amount" />
+        <result column="arrival_time" property="arrivalTime" />
+        <result column="hisName" property="hisName" />
+        <result column="hotel_id" property="hotelId" />
+        <result column="phone" property="phone" />
+        <result column="remarks" property="remarks" />
+        <result column="reservation_time" property="reservationTime" />
+        <result column="status" property="status" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                amount,
+                arrival_time,
+                hisName,
+                hotel_id,
+                id,
+                phone,
+                remarks,
+                reservation_time,
+                status,
+                user_id
+    </sql>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultType="com.dhlg.module.linxing.appHotelreservation.entity.AppHotelreservation">
+        select * from app_hotelreservation
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.queryContent !=null and parameter.condition.queryContent !='' ">
+                CONCAT(
+                            ,hisName
+                            ,phone
+                            ,remarks
+                ) like concat('%',#{parameter.condition.queryContent},'%')
+            </if>
+        </trim>
+    </select>
+
+    <select id="listFieldQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+
+        select * from app_hotelreservation
+        <trim prefix="where" prefixOverrides="and">
+                        <if test="parameter.amount != null and parameter.amount .size() == 2">
+                            and amount between
+                            <foreach collection="parameter.amount" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+                        <if test="parameter.arrivalTime != null and parameter.arrivalTime .size() == 2">
+                            and arrival_time between
+                            <foreach collection="parameter.arrivalTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+                    <if test=" parameter.hisName !=null and parameter.hisName !='' ">
+                        and hisName like concat('%',#{parameter.hisName},'%')
+                    </if>
+                    <if test="parameter.hotelId  != null and parameter.hotelId.size() > 0">
+                        and hotel_id  in
+                        <foreach collection="parameter.hotelId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test=" parameter.id !=null and parameter.id !='' ">
+                        and id like concat('%',#{parameter.id},'%')
+                    </if>
+                    <if test=" parameter.phone !=null and parameter.phone !='' ">
+                        and phone like concat('%',#{parameter.phone},'%')
+                    </if>
+                    <if test=" parameter.remarks !=null and parameter.remarks !='' ">
+                        and remarks like concat('%',#{parameter.remarks},'%')
+                    </if>
+                        <if test="parameter.reservationTime != null and parameter.reservationTime .size() == 2">
+                            and reservation_time between
+                            <foreach collection="parameter.reservationTime" index="index" item="item" open=" " separator=" and " close=" ">
+                                #{item}
+                            </foreach>
+                        </if>
+
+                    <if test="parameter.status  != null and parameter.status.size() > 0">
+                        and status  in
+                        <foreach collection="parameter.status " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="parameter.userId  != null and parameter.userId.size() > 0">
+                        and user_id  in
+                        <foreach collection="parameter.userId " index="index" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+        </trim>
+        order by id desc
+    </select>
+
+</mapper>

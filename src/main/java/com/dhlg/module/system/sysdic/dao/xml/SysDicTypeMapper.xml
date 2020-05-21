@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.system.sysdic.dao.SysDicTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.system.sysdic.entity.SysDicType">
+        <id column="id" property="id"/>
+        <result column="dic_type" property="dicType"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+
+
+    <select id="getType" resultType="Option" parameterType="String">
+        SELECT
+        sd.dic_label as label,
+        sd.dic_value as `value`,
+        sdt.create_time,
+        sdt.update_time
+        FROM
+        sys_dic_type sdt
+        LEFT JOIN sys_dic sd ON sdt.id = sd.dic_type_id
+        <where>
+            sdt.dic_type = #{type}
+            and sdt.status = 1
+            and sd.status = 1
+        </where>
+        order by if(sdt.update_time is null ,sdt.create_time,sdt.update_time) desc
+
+    </select>
+
+    <select id="pageDicType" parameterType="com.dhlg.utils.common.Parameter" resultMap="BaseResultMap">
+        select  * from sys_dic_type
+        <trim prefix="where" prefixOverrides="and">
+            <if
+                    test="parameter.condition != null and parameter.condition.dicType !=null and parameter.condition.dicType !='' ">
+                and dic_type like concat('%',#{parameter.condition.dicType},'%')
+            </if>
+
+        </trim>
+        order by if(update_time is null ,create_time,update_time) desc
+    </select>
+
+</mapper>

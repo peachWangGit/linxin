@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.system.sysRole.dao.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.system.sysRole.entity.SysRole">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="dr" property="dr" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, remark, status, create_time, create_user, update_time, update_user, dr
+    </sql>
+
+
+
+    <select id="getRoleList" resultType="com.dhlg.module.system.sysRole.entity.SysRole">
+        select  *from sys_role
+    </select>
+
+    <select id="queryByCondition" parameterType="com.dhlg.utils.common.Parameter" resultMap="BaseResultMap">
+        select  *from sys_role t1
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.name !=null and parameter.condition.name !='' ">
+                and t1.name like concat('%',#{parameter.condition.name},'%')
+            </if>
+        </trim>
+    </select>
+
+    <select id="getButMenu" resultType="com.dhlg.module.system.sysMenu.entity.SysMenu">
+        select a.id as id,a.menu_name as menu_name,a.parent_id as parent_id,'menu' as sys_type from sys_menu a where status='1'
+        UNION ALL
+        select b.id as id,b.description as menu_name,b.menu_id as parent_id,'button' as sys_type from sys_button b
+
+    </select>
+
+    <select id="findRoles" parameterType="string" resultType="String">
+        SELECT name FROM sys_role WHERE id in
+        <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

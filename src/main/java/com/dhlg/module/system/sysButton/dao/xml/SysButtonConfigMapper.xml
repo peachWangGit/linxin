@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhlg.module.system.sysButton.dao.SysButtonConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dhlg.module.system.sysButton.entity.SysButtonConfig">
+        <id column="id" property="id" />
+        <result column="button_code" property="buttonCode" />
+        <result column="button_name" property="buttonName" />
+        <result column="description" property="description" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, button_code, button_name, description, create_user, create_time, update_user, update_time
+    </sql>
+
+    <select id="queryByCondition" resultType="com.dhlg.module.system.sysButton.entity.SysButtonConfig">
+        select * from sys_button_config
+        <trim prefix="where" prefixOverrides="and">
+            <if test="parameter.condition != null and parameter.condition.selectWord !=null and parameter.condition.selectWord !='' ">
+                and CONCAT(button_code,button_name) like concat('%',#{parameter.condition.selectWord},'%')
+            </if>
+        </trim>
+        -- order by if(update_time is null ,create_time,update_time) desc
+        order by button_code asc
+    </select>
+</mapper>
